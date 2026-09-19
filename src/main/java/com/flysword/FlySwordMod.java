@@ -20,8 +20,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 @Mod(FlySwordMod.MODID)
 public class FlySwordMod {
     public static final String MODID = "flysword";
-    public static final String NAME = "Fly Sword Mod";
-    public static final String VERSION = "1.2.0";
 
     public FlySwordMod(FMLJavaModLoadingContext context) {
         IEventBus modBus = context.getModEventBus();

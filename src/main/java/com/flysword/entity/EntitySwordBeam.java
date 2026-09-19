@@ -73,10 +73,6 @@ public class EntitySwordBeam extends ThrowableProjectile {
         super(type, shooter, level);
     }
 
-    public EntitySwordBeam(EntityType<? extends EntitySwordBeam> type, double x, double y, double z, Level level) {
-        super(type, x, y, z, level);
-    }
-
     @Override
     protected void defineSynchedData() {
     }
