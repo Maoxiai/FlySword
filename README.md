@@ -60,6 +60,8 @@
 - 满级（4 级）可穿透多个目标，未满级命中即消失
 - 每次释放有 50% 概率消耗 1 点耐久
 
+> 以上数值均为默认值，全部可在[配置文件](#配置)中调整。
+
 ### 安装
 
 1. 安装 Minecraft 1.20.1 与对应版本的 Forge（47.x）
@@ -71,6 +73,15 @@
 ```
 /give @s diamond_sword{Enchantments:[{id:"flysword:flysword",lvl:1},{id:"flysword:swordbeam",lvl:4}]}
 ```
+
+### 配置
+
+服务端与客户端都会生成 `config/flysword-common.toml`，可脱离源码调整平衡参数。
+
+- `[fly_sword]`：上升/下降垂直加速度、水平速度倍率、水平/垂直阻尼
+- `[sword_beam]`：冷却、伤害系数、飞行速度、存活时间、穿透衰减、击退强度、耐久消耗概率
+
+注意：飞剑的移动由骑乘者客户端模拟，`[fly_sword]` 相关参数按各客户端本地配置生效；`[sword_beam]` 的伤害与冷却在服务端计算，以服务端配置为准。
 
 ### 从源码构建
 
@@ -92,6 +103,7 @@
 ```
 src/main/java/com/flysword/
 ├── FlySwordMod.java        模组入口与右键/左键事件处理
+├── config/                 平衡参数配置（ForgeConfigSpec）
 ├── enchantment/            附魔定义与注册
 ├── entity/                 飞剑载具、剑气投掷物
 ├── key/                    按键绑定
@@ -110,9 +122,14 @@ src/main/resources/
 
 内置 `en_us` 与 `zh_cn`。
 
-### 许可与致谢
+### 许可与版权
 
-本项目以 **GPL-3.0** 授权发布。
+本项目以 **GPL-3.0** 授权发布，完整许可正文见 [LICENSE.txt](./LICENSE.txt)。
+
+```
+Copyright (C) 2026 Maoxiai
+Copyright (C) 2019-2022 Kesar
+```
 
 剑气相关的实体与渲染代码改编自 coolAlias 的
 [Dynamic Sword Skills](https://github.com/coolAlias/DynamicSwordSkills)（同为 GPL-3.0）。

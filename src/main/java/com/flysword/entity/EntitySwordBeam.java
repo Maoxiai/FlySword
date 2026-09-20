@@ -17,6 +17,7 @@
 
 package com.flysword.entity;
 
+import com.flysword.config.FlySwordConfig;
 import com.flysword.enchantment.ModEnchantments;
 import com.flysword.utils.PlayerUtils;
 import net.minecraft.core.particles.ParticleOptions;
@@ -58,12 +59,7 @@ public class EntitySwordBeam extends ThrowableProjectile {
     /**
      * Base number of ticks this entity can exist
      */
-    private int lifespan = 12;
-
-    /**
-     * The amount of knockback an arrow applies when it hits a mob.
-     */
-    private int knockbackStrength = 1;
+    private int lifespan = FlySwordConfig.BEAM_LIFESPAN_BASE.get();
 
     public EntitySwordBeam(EntityType<? extends EntitySwordBeam> type, Level level) {
         super(type, level);
@@ -82,7 +78,8 @@ public class EntitySwordBeam extends ThrowableProjectile {
      */
     public EntitySwordBeam setLevel(int level) {
         this.level = level;
-        this.lifespan += level;
+        this.lifespan = FlySwordConfig.BEAM_LIFESPAN_BASE.get()
+                + level * FlySwordConfig.BEAM_LIFESPAN_PER_LEVEL.get();
         return this;
     }
 
@@ -95,7 +92,8 @@ public class EntitySwordBeam extends ThrowableProjectile {
     }
 
     public float getVelocity() {
-        return 1.0F + (this.level * 0.15F);
+        return (float) (FlySwordConfig.BEAM_VELOCITY_BASE.get()
+                + this.level * FlySwordConfig.BEAM_VELOCITY_PER_LEVEL.get());
     }
 
     @Override
@@ -141,15 +139,16 @@ public class EntitySwordBeam extends ThrowableProjectile {
             if (player != null) {
                 if (entityHit.hurt(this.damageSources().thrown(this, player), this.damage)) {
                     PlayerUtils.playSoundAtEntity(this.level(), entityHit, SoundEvents.PLAYER_ATTACK_STRONG, SoundSource.PLAYERS, 0.4F, 0.5F);
-                    if (entityHit instanceof LivingEntity && this.knockbackStrength > 0) {
+                    int knockbackStrength = FlySwordConfig.BEAM_KNOCKBACK_STRENGTH.get();
+                    if (entityHit instanceof LivingEntity && knockbackStrength > 0) {
                         Vec3 motion = this.getDeltaMovement();
                         float f1 = Mth.sqrt((float) (motion.x * motion.x + motion.z * motion.z));
                         if (f1 > 0.0F) {
-                            entityHit.push(motion.x * (double) this.knockbackStrength * 0.6D / (double) f1, 0.1D,
-                                    motion.z * (double) this.knockbackStrength * 0.6D / (double) f1);
+                            entityHit.push(motion.x * (double) knockbackStrength * 0.6D / (double) f1, 0.1D,
+                                    motion.z * (double) knockbackStrength * 0.6D / (double) f1);
                         }
                     }
-                    this.damage *= 0.8F;
+                    this.damage *= FlySwordConfig.BEAM_PIERCE_DAMAGE_DECAY.get().floatValue();
                 }
             }
             if (this.level < ModEnchantments.SWORD_BEAM.get().getMaxLevel()) {

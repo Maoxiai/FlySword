@@ -1,5 +1,6 @@
 package com.flysword.entity;
 
+import com.flysword.config.FlySwordConfig;
 import com.flysword.key.ModKeys;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -251,11 +252,12 @@ public class EntitySword extends LivingEntity {
             return;
         }
 
+        double verticalAcceleration = FlySwordConfig.FLY_VERTICAL_ACCELERATION.get();
         if (this.down()) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -0.03D, 0.0D));
+            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, -verticalAcceleration, 0.0D));
         }
         if (this.up()) {
-            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, 0.03D, 0.0D));
+            this.setDeltaMovement(this.getDeltaMovement().add(0.0D, verticalAcceleration, 0.0D));
         }
 
         this.setYRot(player.getYRot());
@@ -271,10 +273,13 @@ public class EntitySword extends LivingEntity {
             forward *= 0.25F;
         }
 
-        float acceleration = (float) player.getAttributeValue(Attributes.MOVEMENT_SPEED) * 2.0F * 0.1F;
+        float acceleration = (float) (player.getAttributeValue(Attributes.MOVEMENT_SPEED)
+                * FlySwordConfig.FLY_SPEED_MULTIPLIER.get() * 0.1D);
         this.moveRelative(acceleration, new Vec3(strafe, 0.0D, forward));
         this.move(MoverType.SELF, this.getDeltaMovement());
-        this.setDeltaMovement(this.getDeltaMovement().multiply(0.91D, 0.98D, 0.91D));
+        double horizontalDrag = FlySwordConfig.FLY_HORIZONTAL_DRAG.get();
+        this.setDeltaMovement(this.getDeltaMovement().multiply(horizontalDrag,
+                FlySwordConfig.FLY_VERTICAL_DRAG.get(), horizontalDrag));
     }
 
     @Override

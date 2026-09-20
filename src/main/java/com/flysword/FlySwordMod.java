@@ -1,5 +1,6 @@
 package com.flysword;
 
+import com.flysword.config.FlySwordConfig;
 import com.flysword.enchantment.ModEnchantments;
 import com.flysword.entity.EntitySword;
 import com.flysword.loader.EntityLoader;
@@ -15,6 +16,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(FlySwordMod.MODID)
@@ -23,6 +25,8 @@ public class FlySwordMod {
 
     public FlySwordMod(FMLJavaModLoadingContext context) {
         IEventBus modBus = context.getModEventBus();
+
+        context.registerConfig(ModConfig.Type.COMMON, FlySwordConfig.SPEC);
 
         EntityLoader.register(modBus);
         ModEnchantments.register(modBus);

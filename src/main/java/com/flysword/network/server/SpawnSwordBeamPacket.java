@@ -1,5 +1,6 @@
 package com.flysword.network.server;
 
+import com.flysword.config.FlySwordConfig;
 import com.flysword.enchantment.ModEnchantments;
 import com.flysword.entity.EntitySwordBeam;
 import com.flysword.loader.EntityLoader;
@@ -43,20 +44,20 @@ public class SpawnSwordBeamPacket {
                 return;
             }
 
-            if (player.getRandom().nextBoolean()) {
+            if (player.getRandom().nextDouble() < FlySwordConfig.BEAM_DURABILITY_COST_CHANCE.get()) {
                 stack.hurtAndBreak(1, player, p -> p.broadcastBreakEvent(InteractionHand.MAIN_HAND));
             }
             PlayerUtils.playSoundAtEntity(player.level(), player, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 0.4F, 0.5F);
 
-            float damage = getDamage(player, stack) * (level * 0.25F);
+            float damage = getDamage(player, stack) * (float) (level * FlySwordConfig.BEAM_DAMAGE_PER_LEVEL.get());
             EntitySwordBeam beam = new EntitySwordBeam(EntityLoader.SWORD_BEAM.get(), player, player.level())
                     .setLevel(level)
                     .setDamage(damage);
             beam.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, beam.getVelocity(), 1.0F);
             player.level().addFreshEntity(beam);
 
-            // TODO 可配置
-            player.getCooldowns().addCooldown(stack.getItem(), 80 - level * 13);
+            player.getCooldowns().addCooldown(stack.getItem(),
+                    FlySwordConfig.BEAM_COOLDOWN_BASE.get() - level * FlySwordConfig.BEAM_COOLDOWN_PER_LEVEL.get());
         });
         ctx.setPacketHandled(true);
     }
