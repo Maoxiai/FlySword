@@ -5,11 +5,14 @@ import com.flysword.enchantment.ModEnchantments;
 import com.flysword.key.ModKeys;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -28,6 +31,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -39,6 +43,12 @@ public class EntitySword extends LivingEntity {
      * 飞剑模型的渲染高度偏移，Renderer 与拖尾粒子共用，保证拖尾贴合剑身
      */
     public static final double RENDER_OFFSET_Y = 1.0D;
+
+    /**
+     * 化神境（5 级）拖尾混合使用的金色仙尘
+     */
+    private static final ParticleOptions GOLD_DUST =
+            new DustParticleOptions(new Vector3f(1.0F, 0.85F, 0.35F), 0.9F);
 
     private static final String NBT_KEY_RENDER_ITEM = "RenderItem";
     private static final String NBT_KEY_OWNER_UUID = "OwnerUUID";
@@ -217,7 +227,27 @@ public class EntitySword extends LivingEntity {
     }
 
     /**
-     * 沿本刻的移动路径撒粒子形成拖尾，仅客户端执行，粒子数量随附魔等级提升
+     * 各附魔等级对应的拖尾风格，随境界递进：
+     * <ul>
+     *   <li>1 级 炼气 —— 灵气符文</li>
+     *   <li>2 级 筑基 —— 剑罡电芒</li>
+     *   <li>3 级 金丹 —— 真元灵光</li>
+     *   <li>4 级 元婴 —— 幽蓝灵焰</li>
+     *   <li>5 级 化神 —— 金霞仙光（仙尘与金光交替）</li>
+     * </ul>
+     */
+    private static ParticleOptions trailParticleFor(int level, int index) {
+        return switch (Mth.clamp(level, 1, 5)) {
+            case 1 -> ParticleTypes.ENCHANT;
+            case 2 -> ParticleTypes.ELECTRIC_SPARK;
+            case 3 -> ParticleTypes.END_ROD;
+            case 4 -> ParticleTypes.SOUL_FIRE_FLAME;
+            default -> index % 2 == 0 ? ParticleTypes.TOTEM_OF_UNDYING : GOLD_DUST;
+        };
+    }
+
+    /**
+     * 沿本刻的移动路径撒粒子形成拖尾，仅客户端执行。粒子数量与风格随附魔等级提升
      */
     @OnlyIn(Dist.CLIENT)
     private void spawnTrailParticles(double prevX, double prevY, double prevZ) {
@@ -233,15 +263,16 @@ public class EntitySword extends LivingEntity {
             return;
         }
 
+        int level = Mth.clamp(this.getEnchantLevel(), 1, 5);
         int count = FlySwordConfig.FLY_TRAIL_PARTICLES_BASE.get()
-                + Math.max(0, this.getEnchantLevel() - 1) * FlySwordConfig.FLY_TRAIL_PARTICLES_PER_LEVEL.get();
+                + (level - 1) * FlySwordConfig.FLY_TRAIL_PARTICLES_PER_LEVEL.get();
         if (count <= 0) {
             return;
         }
 
         for (int i = 0; i < count; i++) {
             double t = this.random.nextDouble();
-            this.level().addParticle(ParticleTypes.END_ROD,
+            this.level().addParticle(trailParticleFor(level, i),
                     prevX + dx * t,
                     prevY + dy * t + RENDER_OFFSET_Y,
                     prevZ + dz * t,
