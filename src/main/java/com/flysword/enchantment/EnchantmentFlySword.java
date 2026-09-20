@@ -14,6 +14,11 @@ public class EnchantmentFlySword extends Enchantment {
     }
 
     @Override
+    public int getMaxLevel() {
+        return 5;
+    }
+
+    @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
         return stack.getItem() instanceof SwordItem;
     }

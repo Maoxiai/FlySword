@@ -31,7 +31,7 @@ public class RenderSword extends EntityRenderer<EntitySword> {
         }
 
         poseStack.pushPose();
-        poseStack.translate(0.0D, 1.0D, 0.0D);
+        poseStack.translate(0.0D, EntitySword.RENDER_OFFSET_Y, 0.0D);
         poseStack.mulPose(Axis.ZP.rotationDegrees(-45.0F));
         // 等价于 GlStateManager.rotate(90, 1, 1, 0)
         poseStack.mulPose(new Quaternionf().rotationAxis((float) Math.toRadians(90.0D), 1.0F, 1.0F, 0.0F));
