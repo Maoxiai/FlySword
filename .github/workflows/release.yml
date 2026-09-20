@@ -49,6 +49,16 @@ jobs:
           body: |
             Minecraft **1.20.1** ｜ Forge **47.x** ｜ Java **17**
 
-            下载下方的 `flysword-*.jar` 放入 `.minecraft/mods` 即可，客户端与服务端都需要安装。
+            ### 安装
 
-            完整说明见 [README](https://github.com/${{ github.repository }}#readme)。
+            下载下方的 `flysword-*.jar` 放入 `.minecraft/mods`，客户端与服务端都需要安装。
+
+            ### 附魔
+
+            - **御剑飞行**：手持附魔剑右键召唤飞剑并骑乘。空格上升、左 Ctrl 下降、WASD 移动、左 Shift 收剑
+            - **剑气**：左键点击空气发射剑气，命中后伤害递减，满级可穿透多个目标
+
+            两个附魔均为 5 级，飞行拖尾粒子随等级递进（炼气 / 筑基 / 金丹 / 元婴 / 化神）。
+            平衡参数可在 `config/flysword-common.toml` 中调整，无需重新编译。
+
+            详细说明见 [README](https://github.com/${{ github.repository }}#readme)。
