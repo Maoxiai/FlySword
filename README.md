@@ -11,7 +11,7 @@
 | Minecraft | 1.20.1 |
 | Forge | 47.x |
 | Java | 17 |
-| 模组版本 | 1.2.0 |
+| 模组版本 | 1.0.0 |
 
 客户端与服务端都需要安装。
 
@@ -105,7 +105,7 @@
 ### 安装
 
 1. 安装 Minecraft 1.20.1 与对应版本的 Forge（47.x）
-2. 将 `flysword-1.2.0.jar` 放入 `.minecraft/mods`
+2. 将 `flysword-1.0.0.jar` 放入 `.minecraft/mods`
 3. 启动游戏
 
 也可以直接用指令附魔：
@@ -132,7 +132,7 @@
 ./gradlew build
 ```
 
-产物位于 `build/libs/flysword-1.2.0.jar`。
+产物位于 `build/libs/flysword-1.0.0.jar`。
 
 开发环境运行：
 
