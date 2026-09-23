@@ -1,5 +1,14 @@
 {
   "key.fly_sword_down": "Fly Sword Down",
+  "key.fly_sword_skill": "Sword Skill",
+  "key.fly_sword_skill_2": "Sword Skill Alt",
+  "skill.flysword.spread": "Sword Barrage",
+  "skill.flysword.flyingsword": "Flying Sword Art",
+  "skill.flysword.myriad": "Myriad Swords",
+  "skill.flysword.rain": "Sword Rain",
+  "skill.flysword.cooldown": "%s on cooldown · %ss",
+  "skill.flysword.unlock": "%s requires level %s (current %s)",
   "enchantment.flysword.flysword": "Fly Sword",
-  "enchantment.flysword.swordbeam": "Sword Beam"
+  "enchantment.flysword.swordbeam": "Sword Beam",
+  "enchantment.flysword.swordintent": "Sword Intent"
 }

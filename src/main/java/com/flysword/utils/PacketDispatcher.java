@@ -2,6 +2,7 @@ package com.flysword.utils;
 
 import com.flysword.FlySwordMod;
 import com.flysword.network.server.SpawnSwordBeamPacket;
+import com.flysword.network.server.SwordSkillPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -24,6 +25,11 @@ public class PacketDispatcher {
                 .encoder(SpawnSwordBeamPacket::toBytes)
                 .decoder(SpawnSwordBeamPacket::new)
                 .consumerMainThread(SpawnSwordBeamPacket::handle)
+                .add();
+        CHANNEL.messageBuilder(SwordSkillPacket.class, packetId++)
+                .encoder(SwordSkillPacket::toBytes)
+                .decoder(SwordSkillPacket::new)
+                .consumerMainThread(SwordSkillPacket::handle)
                 .add();
     }
 

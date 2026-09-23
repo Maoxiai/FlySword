@@ -227,7 +227,7 @@ public class EntitySword extends LivingEntity {
     }
 
     /**
-     * 各附魔等级对应的拖尾风格，随境界递进：
+     * 各附魔等级对应的拖尾风格，随境界递进。骑乘飞剑与御剑术飞剑共用
      * <ul>
      *   <li>1 级 炼气 —— 灵气符文</li>
      *   <li>2 级 筑基 —— 剑罡电芒</li>
@@ -236,7 +236,7 @@ public class EntitySword extends LivingEntity {
      *   <li>5 级 化神 —— 金霞仙光（仙尘与金光交替）</li>
      * </ul>
      */
-    private static ParticleOptions trailParticleFor(int level, int index) {
+    public static ParticleOptions particleForLevel(int level, int index) {
         return switch (Mth.clamp(level, 1, 5)) {
             case 1 -> ParticleTypes.ENCHANT;
             case 2 -> ParticleTypes.ELECTRIC_SPARK;
@@ -272,7 +272,7 @@ public class EntitySword extends LivingEntity {
 
         for (int i = 0; i < count; i++) {
             double t = this.random.nextDouble();
-            this.level().addParticle(trailParticleFor(level, i),
+            this.level().addParticle(particleForLevel(level, i),
                     prevX + dx * t,
                     prevY + dy * t + RENDER_OFFSET_Y,
                     prevZ + dz * t,
@@ -289,11 +289,12 @@ public class EntitySword extends LivingEntity {
         }
     }
 
-    private void putAwaySword(Player player) {
+    protected void putAwaySword(Player player) {
         if (!this.level().isClientSide) {
             ItemStack sword = this.getItemStack();
             this.setItemStack(ItemStack.EMPTY);
-            if (!sword.isEmpty() && !player.getInventory().add(sword)) {
+            boolean stored = !sword.isEmpty() && player.getInventory().add(sword);
+            if (!sword.isEmpty() && !stored) {
                 this.spawnAtLocation(sword);
             }
         }

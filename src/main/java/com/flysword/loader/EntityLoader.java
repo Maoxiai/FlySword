@@ -1,6 +1,7 @@
 package com.flysword.loader;
 
 import com.flysword.FlySwordMod;
+import com.flysword.entity.EntityFlyingSword;
 import com.flysword.entity.EntitySword;
 import com.flysword.entity.EntitySwordBeam;
 import net.minecraft.world.entity.EntityType;
@@ -33,6 +34,14 @@ public final class EntityLoader {
                     .updateInterval(10)
                     .build("entity_sword_beam"));
 
+    public static final RegistryObject<EntityType<EntityFlyingSword>> FLYING_SWORD =
+            ENTITY_TYPES.register("entity_flying_sword", () -> EntityType.Builder
+                    .<EntityFlyingSword>of(EntityFlyingSword::new, MobCategory.MISC)
+                    .sized(0.6F, 0.6F)
+                    .clientTrackingRange(10)
+                    .updateInterval(1)
+                    .build("entity_flying_sword"));
+
     public static void register(IEventBus modBus) {
         ENTITY_TYPES.register(modBus);
         modBus.addListener(EntityLoader::onEntityAttributeCreation);
@@ -40,5 +49,6 @@ public final class EntityLoader {
 
     private static void onEntityAttributeCreation(EntityAttributeCreationEvent event) {
         event.put(SWORD.get(), EntitySword.createAttributes().build());
+        event.put(FLYING_SWORD.get(), EntitySword.createAttributes().build());
     }
 }

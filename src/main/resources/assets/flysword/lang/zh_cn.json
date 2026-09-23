@@ -1,5 +1,14 @@
 {
   "key.fly_sword_down": "飞剑下降",
+  "key.fly_sword_skill": "剑招",
+  "key.fly_sword_skill_2": "第二剑招",
+  "skill.flysword.spread": "剑气纵横",
+  "skill.flysword.flyingsword": "御剑术",
+  "skill.flysword.myriad": "万剑归宗",
+  "skill.flysword.rain": "剑雨",
+  "skill.flysword.cooldown": "%s 冷却中 · %s 秒",
+  "skill.flysword.unlock": "%s 需 %s 级境界（当前 %s 级）",
   "enchantment.flysword.flysword": "御剑飞行",
-  "enchantment.flysword.swordbeam": "剑气"
+  "enchantment.flysword.swordbeam": "剑气",
+  "enchantment.flysword.swordintent": "剑意通明"
 }

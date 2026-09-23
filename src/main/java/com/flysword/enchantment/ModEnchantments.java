@@ -17,6 +17,9 @@ public class ModEnchantments {
     public static final RegistryObject<Enchantment> SWORD_BEAM =
             ENCHANTMENTS.register(EnchantmentSwordBeam.NAME, EnchantmentSwordBeam::new);
 
+    public static final RegistryObject<Enchantment> SWORD_INTENT =
+            ENCHANTMENTS.register(EnchantmentSwordIntent.NAME, EnchantmentSwordIntent::new);
+
     public static void register(IEventBus modBus) {
         ENCHANTMENTS.register(modBus);
     }

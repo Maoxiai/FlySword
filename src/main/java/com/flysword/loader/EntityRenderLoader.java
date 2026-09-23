@@ -2,6 +2,7 @@ package com.flysword.loader;
 
 import com.flysword.FlySwordMod;
 import com.flysword.render.RenderEntitySwordBeam;
+import com.flysword.render.RenderFlyingSword;
 import com.flysword.render.RenderSword;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -14,6 +15,7 @@ public class EntityRenderLoader {
     @SubscribeEvent
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(EntityLoader.SWORD.get(), RenderSword::new);
+        event.registerEntityRenderer(EntityLoader.FLYING_SWORD.get(), RenderFlyingSword::new);
         event.registerEntityRenderer(EntityLoader.SWORD_BEAM.get(), RenderEntitySwordBeam::new);
     }
 }

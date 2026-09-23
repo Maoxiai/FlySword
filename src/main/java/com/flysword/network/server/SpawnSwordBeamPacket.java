@@ -2,23 +2,22 @@ package com.flysword.network.server;
 
 import com.flysword.config.FlySwordConfig;
 import com.flysword.enchantment.ModEnchantments;
-import com.flysword.entity.EntitySwordBeam;
-import com.flysword.loader.EntityLoader;
 import com.flysword.utils.PlayerUtils;
+import com.flysword.utils.SwordBeamLauncher;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.MobType;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
+/**
+ * 剑气：手持带剑气附魔的剑左键点击空气时，向前方发射一道剑气
+ */
 public class SpawnSwordBeamPacket {
 
     public SpawnSwordBeamPacket() {
@@ -49,25 +48,13 @@ public class SpawnSwordBeamPacket {
             }
             PlayerUtils.playSoundAtEntity(player.level(), player, SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 0.4F, 0.5F);
 
-            float damage = getDamage(player, stack) * (float) (level * FlySwordConfig.BEAM_DAMAGE_PER_LEVEL.get());
-            EntitySwordBeam beam = new EntitySwordBeam(EntityLoader.SWORD_BEAM.get(), player, player.level())
-                    .setLevel(level)
-                    .setDamage(damage);
-            beam.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, beam.getVelocity(), 1.0F);
-            player.level().addFreshEntity(beam);
+            float damage = SwordBeamLauncher.baseDamage(player, stack)
+                    * (float) (level * FlySwordConfig.BEAM_DAMAGE_PER_LEVEL.get());
+            SwordBeamLauncher.launch(player, level, damage, 0.0F);
 
             player.getCooldowns().addCooldown(stack.getItem(),
                     FlySwordConfig.BEAM_COOLDOWN_BASE.get() - level * FlySwordConfig.BEAM_COOLDOWN_PER_LEVEL.get());
         });
         ctx.setPacketHandled(true);
-    }
-
-    /**
-     * Returns player's base damage (with sword) plus 1.0F per level
-     */
-    private float getDamage(Player player, ItemStack heldItemStack) {
-        float f = (float) player.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        float f1 = EnchantmentHelper.getDamageBonus(heldItemStack, MobType.UNDEFINED);
-        return f + f1;
     }
 }
